@@ -1,0 +1,24 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "me.catsflex.${mod_package_id}.mixin",
+	"compatibilityLevel": "JAVA_${java_version}",
+	"client": [
+		"ClientPacketListenerMixin",
+		"PotionGlintMixin",
+		"accessor.ColorParticleOptionAccessor",
+		"accessor.MobEffectAccessor",
+		"color.AreaEffectCloudMixin",
+		"color.ArrowMixin",
+		"color.LivingEntityMixin",
+		"color.MobEffectMixin",
+		"color.PotionMixin",
+		"invoker.ServerPlayerInvoker"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

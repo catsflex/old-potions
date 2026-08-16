@@ -1,0 +1,67 @@
+plugins {
+	id "fabric-loom" version "${fabric_loom_version}"
+}
+
+def javaVersion = project.java_version as int
+version = project.mod_version
+group = project.maven_group
+
+remapJar {
+	archiveFileName.set("${project.mod_id}-v${project.mod_version}+mc${project.minecraft_version}-fabric.jar")
+}
+
+repositories {
+	maven { url = "https://maven.terraformersmc.com/releases/" }
+	maven { url = "https://maven.isxander.dev/releases" }
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
+}
+
+processResources {
+	def replaceProperties = [
+		"mod_id": project.mod_id,
+		"mod_package_id": project.mod_package_id,
+		"mod_name": project.mod_name,
+		"mod_description": project.mod_description,
+		"mod_version": project.mod_version,
+		"mod_author": project.mod_author,
+		"mod_homepage_url": project.mod_homepage_url,
+		"mod_sources_url": project.mod_sources_url,
+		"mod_issues_url": project.mod_issues_url,
+		"mod_license": project.mod_license,
+		"maven_group": project.maven_group,
+		"java_version": project.java_version,
+		"minecraft_version": project.minecraft_version,
+		"fabric_loader_version": project.fabric_loader_version,
+		"fabric_loom_version": project.fabric_loom_version,
+		"fabric_api_version": project.fabric_api_version,
+		"modmenu_version": project.modmenu_version,
+		"yacl_version": project.yacl_version
+	]
+	
+	inputs.properties(replaceProperties)
+	
+	filesMatching([
+		"fabric.mod.json",
+		"**/*.mixins.json",
+		"assets/**/lang/*.json"
+	]) {
+		expand replaceProperties
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = "UTF-8"
+	it.options.release.set(javaVersion)
+}
+
+java {
+	toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
+}
